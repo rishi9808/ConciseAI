@@ -13,8 +13,9 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Sommoire",
-  description: "sommoire is a ai pdf summary generator",
+  title: "ConciseAI - AI PDF Summary Generator",
+  description:
+    "ConciseAI is an AI-powered tool that transforms lengthy PDFs into concise, actionable summaries in just a few clicks.",
 };
 
 export default function RootLayout({
