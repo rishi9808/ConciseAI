@@ -93,6 +93,7 @@ export async function savePdfSummary({
 }: pdfSummaryType) {
   try {
     const user = await currentUser();
+    console.log("🧑 Clerk user in production:", user?.id);
     if (!user) throw new Error("User not authenticated");
     const userId = user.id;
     const savedSummary = await prisma.pdfSummary.create({

@@ -1052,12 +1052,10 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     payments: number
-    summaries: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     payments?: boolean | UserCountOutputTypeCountPaymentsArgs
-    summaries?: boolean | UserCountOutputTypeCountSummariesArgs
   }
 
   // Custom InputTypes
@@ -1076,13 +1074,6 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PaymentWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountSummariesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PdfSummaryWhereInput
   }
 
 
@@ -1279,7 +1270,6 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     payments?: boolean | User$paymentsArgs<ExtArgs>
-    summaries?: boolean | User$summariesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1319,7 +1309,6 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "full_name" | "customer_id" | "price_id" | "status" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     payments?: boolean | User$paymentsArgs<ExtArgs>
-    summaries?: boolean | User$summariesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1329,7 +1318,6 @@ export namespace Prisma {
     name: "User"
     objects: {
       payments: Prisma.$PaymentPayload<ExtArgs>[]
-      summaries: Prisma.$PdfSummaryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1735,7 +1723,6 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     payments<T extends User$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    summaries<T extends User$summariesArgs<ExtArgs> = {}>(args?: Subset<T, User$summariesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PdfSummaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2185,30 +2172,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.summaries
-   */
-  export type User$summariesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PdfSummary
-     */
-    select?: PdfSummarySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PdfSummary
-     */
-    omit?: PdfSummaryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
-    where?: PdfSummaryWhereInput
-    orderBy?: PdfSummaryOrderByWithRelationInput | PdfSummaryOrderByWithRelationInput[]
-    cursor?: PdfSummaryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PdfSummaryScalarFieldEnum | PdfSummaryScalarFieldEnum[]
-  }
-
-  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2423,7 +2386,6 @@ export namespace Prisma {
     file_name?: boolean
     created_at?: boolean
     updated_at?: boolean
-    user?: boolean | PdfSummary$userArgs<ExtArgs>
   }, ExtArgs["result"]["pdfSummary"]>
 
   export type PdfSummarySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2436,7 +2398,6 @@ export namespace Prisma {
     file_name?: boolean
     created_at?: boolean
     updated_at?: boolean
-    user?: boolean | PdfSummary$userArgs<ExtArgs>
   }, ExtArgs["result"]["pdfSummary"]>
 
   export type PdfSummarySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2449,7 +2410,6 @@ export namespace Prisma {
     file_name?: boolean
     created_at?: boolean
     updated_at?: boolean
-    user?: boolean | PdfSummary$userArgs<ExtArgs>
   }, ExtArgs["result"]["pdfSummary"]>
 
   export type PdfSummarySelectScalar = {
@@ -2465,21 +2425,10 @@ export namespace Prisma {
   }
 
   export type PdfSummaryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "original_file_url" | "summary_text" | "status" | "title" | "file_name" | "created_at" | "updated_at", ExtArgs["result"]["pdfSummary"]>
-  export type PdfSummaryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | PdfSummary$userArgs<ExtArgs>
-  }
-  export type PdfSummaryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | PdfSummary$userArgs<ExtArgs>
-  }
-  export type PdfSummaryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | PdfSummary$userArgs<ExtArgs>
-  }
 
   export type $PdfSummaryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PdfSummary"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs> | null
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
       user_id: string | null
@@ -2884,7 +2833,6 @@ export namespace Prisma {
    */
   export interface Prisma__PdfSummaryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends PdfSummary$userArgs<ExtArgs> = {}>(args?: Subset<T, PdfSummary$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2940,10 +2888,6 @@ export namespace Prisma {
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
-    /**
      * Filter, which PdfSummary to fetch.
      */
     where: PdfSummaryWhereUniqueInput
@@ -2962,10 +2906,6 @@ export namespace Prisma {
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
-    /**
      * Filter, which PdfSummary to fetch.
      */
     where: PdfSummaryWhereUniqueInput
@@ -2983,10 +2923,6 @@ export namespace Prisma {
      * Omit specific fields from the PdfSummary
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
     /**
      * Filter, which PdfSummary to fetch.
      */
@@ -3036,10 +2972,6 @@ export namespace Prisma {
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
-    /**
      * Filter, which PdfSummary to fetch.
      */
     where?: PdfSummaryWhereInput
@@ -3088,10 +3020,6 @@ export namespace Prisma {
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
-    /**
      * Filter, which PdfSummaries to fetch.
      */
     where?: PdfSummaryWhereInput
@@ -3135,10 +3063,6 @@ export namespace Prisma {
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
-    /**
      * The data needed to create a PdfSummary.
      */
     data: XOR<PdfSummaryCreateInput, PdfSummaryUncheckedCreateInput>
@@ -3172,10 +3096,6 @@ export namespace Prisma {
      */
     data: PdfSummaryCreateManyInput | PdfSummaryCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -3190,10 +3110,6 @@ export namespace Prisma {
      * Omit specific fields from the PdfSummary
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
     /**
      * The data needed to update a PdfSummary.
      */
@@ -3246,10 +3162,6 @@ export namespace Prisma {
      * Limit how many PdfSummaries to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -3264,10 +3176,6 @@ export namespace Prisma {
      * Omit specific fields from the PdfSummary
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
     /**
      * The filter to search for the PdfSummary to update in case it exists.
      */
@@ -3295,10 +3203,6 @@ export namespace Prisma {
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
-    /**
      * Filter which PdfSummary to delete.
      */
     where: PdfSummaryWhereUniqueInput
@@ -3319,25 +3223,6 @@ export namespace Prisma {
   }
 
   /**
-   * PdfSummary.user
-   */
-  export type PdfSummary$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
    * PdfSummary without action
    */
   export type PdfSummaryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3349,10 +3234,6 @@ export namespace Prisma {
      * Omit specific fields from the PdfSummary
      */
     omit?: PdfSummaryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PdfSummaryInclude<ExtArgs> | null
   }
 
 
@@ -4645,7 +4526,6 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     payments?: PaymentListRelationFilter
-    summaries?: PdfSummaryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -4658,7 +4538,6 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     payments?: PaymentOrderByRelationAggregateInput
-    summaries?: PdfSummaryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4674,7 +4553,6 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     payments?: PaymentListRelationFilter
-    summaries?: PdfSummaryListRelationFilter
   }, "id" | "email" | "customer_id">
 
   export type UserOrderByWithAggregationInput = {
@@ -4718,7 +4596,6 @@ export namespace Prisma {
     file_name?: StringNullableFilter<"PdfSummary"> | string | null
     created_at?: DateTimeFilter<"PdfSummary"> | Date | string
     updated_at?: DateTimeFilter<"PdfSummary"> | Date | string
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
   export type PdfSummaryOrderByWithRelationInput = {
@@ -4731,7 +4608,6 @@ export namespace Prisma {
     file_name?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
-    user?: UserOrderByWithRelationInput
   }
 
   export type PdfSummaryWhereUniqueInput = Prisma.AtLeast<{
@@ -4747,7 +4623,6 @@ export namespace Prisma {
     file_name?: StringNullableFilter<"PdfSummary"> | string | null
     created_at?: DateTimeFilter<"PdfSummary"> | Date | string
     updated_at?: DateTimeFilter<"PdfSummary"> | Date | string
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
 
   export type PdfSummaryOrderByWithAggregationInput = {
@@ -4862,7 +4737,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     payments?: PaymentCreateNestedManyWithoutUserInput
-    summaries?: PdfSummaryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -4875,7 +4749,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
-    summaries?: PdfSummaryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -4888,7 +4761,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     payments?: PaymentUpdateManyWithoutUserNestedInput
-    summaries?: PdfSummaryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -4901,7 +4773,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
-    summaries?: PdfSummaryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -4939,6 +4810,7 @@ export namespace Prisma {
 
   export type PdfSummaryCreateInput = {
     id?: string
+    user_id?: string | null
     original_file_url: string
     summary_text: string
     status?: string
@@ -4946,7 +4818,6 @@ export namespace Prisma {
     file_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    user?: UserCreateNestedOneWithoutSummariesInput
   }
 
   export type PdfSummaryUncheckedCreateInput = {
@@ -4963,6 +4834,7 @@ export namespace Prisma {
 
   export type PdfSummaryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     original_file_url?: StringFieldUpdateOperationsInput | string
     summary_text?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -4970,7 +4842,6 @@ export namespace Prisma {
     file_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneWithoutSummariesNestedInput
   }
 
   export type PdfSummaryUncheckedUpdateInput = {
@@ -4999,6 +4870,7 @@ export namespace Prisma {
 
   export type PdfSummaryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
     original_file_url?: StringFieldUpdateOperationsInput | string
     summary_text?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -5143,22 +5015,12 @@ export namespace Prisma {
     none?: PaymentWhereInput
   }
 
-  export type PdfSummaryListRelationFilter = {
-    every?: PdfSummaryWhereInput
-    some?: PdfSummaryWhereInput
-    none?: PdfSummaryWhereInput
-  }
-
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type PaymentOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PdfSummaryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -5243,11 +5105,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
   }
 
   export type PdfSummaryCountOrderByAggregateInput = {
@@ -5366,25 +5223,11 @@ export namespace Prisma {
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
-  export type PdfSummaryCreateNestedManyWithoutUserInput = {
-    create?: XOR<PdfSummaryCreateWithoutUserInput, PdfSummaryUncheckedCreateWithoutUserInput> | PdfSummaryCreateWithoutUserInput[] | PdfSummaryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: PdfSummaryCreateOrConnectWithoutUserInput | PdfSummaryCreateOrConnectWithoutUserInput[]
-    createMany?: PdfSummaryCreateManyUserInputEnvelope
-    connect?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-  }
-
   export type PaymentUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PaymentCreateWithoutUserInput, PaymentUncheckedCreateWithoutUserInput> | PaymentCreateWithoutUserInput[] | PaymentUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutUserInput | PaymentCreateOrConnectWithoutUserInput[]
     createMany?: PaymentCreateManyUserInputEnvelope
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
-  }
-
-  export type PdfSummaryUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<PdfSummaryCreateWithoutUserInput, PdfSummaryUncheckedCreateWithoutUserInput> | PdfSummaryCreateWithoutUserInput[] | PdfSummaryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: PdfSummaryCreateOrConnectWithoutUserInput | PdfSummaryCreateOrConnectWithoutUserInput[]
-    createMany?: PdfSummaryCreateManyUserInputEnvelope
-    connect?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -5413,20 +5256,6 @@ export namespace Prisma {
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
-  export type PdfSummaryUpdateManyWithoutUserNestedInput = {
-    create?: XOR<PdfSummaryCreateWithoutUserInput, PdfSummaryUncheckedCreateWithoutUserInput> | PdfSummaryCreateWithoutUserInput[] | PdfSummaryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: PdfSummaryCreateOrConnectWithoutUserInput | PdfSummaryCreateOrConnectWithoutUserInput[]
-    upsert?: PdfSummaryUpsertWithWhereUniqueWithoutUserInput | PdfSummaryUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: PdfSummaryCreateManyUserInputEnvelope
-    set?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-    disconnect?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-    delete?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-    connect?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-    update?: PdfSummaryUpdateWithWhereUniqueWithoutUserInput | PdfSummaryUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: PdfSummaryUpdateManyWithWhereWithoutUserInput | PdfSummaryUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: PdfSummaryScalarWhereInput | PdfSummaryScalarWhereInput[]
-  }
-
   export type PaymentUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<PaymentCreateWithoutUserInput, PaymentUncheckedCreateWithoutUserInput> | PaymentCreateWithoutUserInput[] | PaymentUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutUserInput | PaymentCreateOrConnectWithoutUserInput[]
@@ -5439,36 +5268,6 @@ export namespace Prisma {
     update?: PaymentUpdateWithWhereUniqueWithoutUserInput | PaymentUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PaymentUpdateManyWithWhereWithoutUserInput | PaymentUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
-  }
-
-  export type PdfSummaryUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<PdfSummaryCreateWithoutUserInput, PdfSummaryUncheckedCreateWithoutUserInput> | PdfSummaryCreateWithoutUserInput[] | PdfSummaryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: PdfSummaryCreateOrConnectWithoutUserInput | PdfSummaryCreateOrConnectWithoutUserInput[]
-    upsert?: PdfSummaryUpsertWithWhereUniqueWithoutUserInput | PdfSummaryUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: PdfSummaryCreateManyUserInputEnvelope
-    set?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-    disconnect?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-    delete?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-    connect?: PdfSummaryWhereUniqueInput | PdfSummaryWhereUniqueInput[]
-    update?: PdfSummaryUpdateWithWhereUniqueWithoutUserInput | PdfSummaryUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: PdfSummaryUpdateManyWithWhereWithoutUserInput | PdfSummaryUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: PdfSummaryScalarWhereInput | PdfSummaryScalarWhereInput[]
-  }
-
-  export type UserCreateNestedOneWithoutSummariesInput = {
-    create?: XOR<UserCreateWithoutSummariesInput, UserUncheckedCreateWithoutSummariesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSummariesInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserUpdateOneWithoutSummariesNestedInput = {
-    create?: XOR<UserCreateWithoutSummariesInput, UserUncheckedCreateWithoutSummariesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSummariesInput
-    upsert?: UserUpsertWithoutSummariesInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSummariesInput, UserUpdateWithoutSummariesInput>, UserUncheckedUpdateWithoutSummariesInput>
   }
 
   export type UserCreateNestedOneWithoutPaymentsInput = {
@@ -5659,38 +5458,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PdfSummaryCreateWithoutUserInput = {
-    id?: string
-    original_file_url: string
-    summary_text: string
-    status?: string
-    title?: string | null
-    file_name?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type PdfSummaryUncheckedCreateWithoutUserInput = {
-    id?: string
-    original_file_url: string
-    summary_text: string
-    status?: string
-    title?: string | null
-    file_name?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type PdfSummaryCreateOrConnectWithoutUserInput = {
-    where: PdfSummaryWhereUniqueInput
-    create: XOR<PdfSummaryCreateWithoutUserInput, PdfSummaryUncheckedCreateWithoutUserInput>
-  }
-
-  export type PdfSummaryCreateManyUserInputEnvelope = {
-    data: PdfSummaryCreateManyUserInput | PdfSummaryCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type PaymentUpsertWithWhereUniqueWithoutUserInput = {
     where: PaymentWhereUniqueInput
     update: XOR<PaymentUpdateWithoutUserInput, PaymentUncheckedUpdateWithoutUserInput>
@@ -5721,101 +5488,6 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Payment"> | Date | string
   }
 
-  export type PdfSummaryUpsertWithWhereUniqueWithoutUserInput = {
-    where: PdfSummaryWhereUniqueInput
-    update: XOR<PdfSummaryUpdateWithoutUserInput, PdfSummaryUncheckedUpdateWithoutUserInput>
-    create: XOR<PdfSummaryCreateWithoutUserInput, PdfSummaryUncheckedCreateWithoutUserInput>
-  }
-
-  export type PdfSummaryUpdateWithWhereUniqueWithoutUserInput = {
-    where: PdfSummaryWhereUniqueInput
-    data: XOR<PdfSummaryUpdateWithoutUserInput, PdfSummaryUncheckedUpdateWithoutUserInput>
-  }
-
-  export type PdfSummaryUpdateManyWithWhereWithoutUserInput = {
-    where: PdfSummaryScalarWhereInput
-    data: XOR<PdfSummaryUpdateManyMutationInput, PdfSummaryUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type PdfSummaryScalarWhereInput = {
-    AND?: PdfSummaryScalarWhereInput | PdfSummaryScalarWhereInput[]
-    OR?: PdfSummaryScalarWhereInput[]
-    NOT?: PdfSummaryScalarWhereInput | PdfSummaryScalarWhereInput[]
-    id?: StringFilter<"PdfSummary"> | string
-    user_id?: StringNullableFilter<"PdfSummary"> | string | null
-    original_file_url?: StringFilter<"PdfSummary"> | string
-    summary_text?: StringFilter<"PdfSummary"> | string
-    status?: StringFilter<"PdfSummary"> | string
-    title?: StringNullableFilter<"PdfSummary"> | string | null
-    file_name?: StringNullableFilter<"PdfSummary"> | string | null
-    created_at?: DateTimeFilter<"PdfSummary"> | Date | string
-    updated_at?: DateTimeFilter<"PdfSummary"> | Date | string
-  }
-
-  export type UserCreateWithoutSummariesInput = {
-    id?: string
-    email: string
-    full_name?: string | null
-    customer_id?: string | null
-    price_id?: string | null
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    payments?: PaymentCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutSummariesInput = {
-    id?: string
-    email: string
-    full_name?: string | null
-    customer_id?: string | null
-    price_id?: string | null
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutSummariesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutSummariesInput, UserUncheckedCreateWithoutSummariesInput>
-  }
-
-  export type UserUpsertWithoutSummariesInput = {
-    update: XOR<UserUpdateWithoutSummariesInput, UserUncheckedUpdateWithoutSummariesInput>
-    create: XOR<UserCreateWithoutSummariesInput, UserUncheckedCreateWithoutSummariesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutSummariesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutSummariesInput, UserUncheckedUpdateWithoutSummariesInput>
-  }
-
-  export type UserUpdateWithoutSummariesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    full_name?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
-    price_id?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    payments?: PaymentUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutSummariesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    full_name?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
-    price_id?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
-  }
-
   export type UserCreateWithoutPaymentsInput = {
     id?: string
     email: string
@@ -5825,7 +5497,6 @@ export namespace Prisma {
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
-    summaries?: PdfSummaryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -5837,7 +5508,6 @@ export namespace Prisma {
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
-    summaries?: PdfSummaryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -5865,7 +5535,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    summaries?: PdfSummaryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -5877,7 +5546,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    summaries?: PdfSummaryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PaymentCreateManyUserInput = {
@@ -5886,17 +5554,6 @@ export namespace Prisma {
     status: string
     stripe_payment_id: string
     price_id: string
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type PdfSummaryCreateManyUserInput = {
-    id?: string
-    original_file_url: string
-    summary_text: string
-    status?: string
-    title?: string | null
-    file_name?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -5927,39 +5584,6 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     stripe_payment_id?: StringFieldUpdateOperationsInput | string
     price_id?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PdfSummaryUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    original_file_url?: StringFieldUpdateOperationsInput | string
-    summary_text?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    file_name?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PdfSummaryUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    original_file_url?: StringFieldUpdateOperationsInput | string
-    summary_text?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    file_name?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PdfSummaryUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    original_file_url?: StringFieldUpdateOperationsInput | string
-    summary_text?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    file_name?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
