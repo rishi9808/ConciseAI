@@ -4,7 +4,7 @@ import { generatePdfSummaryFromGeminiAi } from "@/lib/geminiAi";
 import { fetchAndExtractPdfText } from "@/lib/langChain";
 import { generatePdfSummaryFromOpenAI } from "@/lib/openAi";
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 interface pdfSummaryType {
@@ -86,13 +86,15 @@ export async function generatePdfSummary(
 }
 
 export async function savePdfSummary({
-  userId,
   fileName,
   fileUrl,
   title,
   summary,
 }: pdfSummaryType) {
   try {
+    const user = await currentUser();
+    if (!user) throw new Error("User not authenticated");
+    const userId = user.id;
     const savedSummary = await prisma.pdfSummary.create({
       data: {
         user_id: userId,
@@ -101,7 +103,6 @@ export async function savePdfSummary({
         title: title,
         summary_text: summary,
         created_at: new Date(),
-        // status: "pending", // Optional, can be set based on your logic
       },
     });
 
@@ -126,22 +127,12 @@ export async function storePdfSummary({
   title,
   summary,
 }: pdfSummaryType) {
-  let savedPdfSummary: any;
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return {
-        success: false,
-        message: "User not authenticated.",
-        data: null,
-      };
-    }
-
-    savedPdfSummary = await savePdfSummary({
+    // No need to get userId here, savePdfSummary will handle it
+    const savedPdfSummary = await savePdfSummary({
       fileName,
       fileUrl,
       title,
-      userId,
       summary,
     });
 
@@ -153,7 +144,7 @@ export async function storePdfSummary({
     }
 
     // Revalidate the saved summary
-    revalidatePath(`/summaries/${savedPdfSummary.id}`);
+    revalidatePath(`/summaries/${savedPdfSummary.data?.id}`);
 
     return {
       success: true,
