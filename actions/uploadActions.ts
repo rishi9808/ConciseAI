@@ -94,7 +94,7 @@ export async function savePdfSummary({
   try {
     const user = await currentUser();
     if (!user) throw new Error("User not authenticated");
-    const userId = user?.id || "default-user-id"; // Fallback for testing
+    const userId = user.id;
     const savedSummary = await prisma.pdfSummary.create({
       data: {
         user_id: userId,
