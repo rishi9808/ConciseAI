@@ -1,4 +1,6 @@
+"use client";
 import Link from "next/link";
+import Script from "next/script";
 import { Check, ArrowRight } from "lucide-react";
 import {
   Card,
@@ -10,6 +12,8 @@ import {
 } from "../ui/card";
 import { MotionDiv } from "../common/motion-wrapper";
 import { containerVariants, itemVariants } from "@/utils/animations";
+import axios from "axios";
+import { Button } from "../ui/button";
 
 type PriceType = {
   id: string;
@@ -61,6 +65,68 @@ const PricingCard = ({
 }: PriceType) => {
   const borderColor = id === "pro" ? "border-rose-500" : "border-gray-300";
   const nameColor = id === "pro" ? "text-rose-600" : "text-gray-700";
+
+  const handlePayment = async () => {
+    try {
+      const { data } = await axios.post("/api/payments", {
+        amount: price * 100, // amount in paise (INR)
+      });
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+        amount: data.amount,
+        currency: data.currency,
+        name: "Concise AI",
+        description: `${name} Plan Subscription`,
+        image: "https://example.com/your_logo.png", // optional
+        order_id: data.id, // from backend API response
+        handler: async function (response: any) {
+          try {
+            const verifyRes = await axios.post("/api/payments/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            if (verifyRes.data.success) {
+              alert("✅ Payment Verified & Success!");
+              // Optional: Redirect to success page or unlock features
+            } else {
+              alert("⚠️ Payment verification failed");
+            }
+          } catch (err) {
+            console.error("Verification error:", err);
+            alert("❌ Something went wrong with verification.");
+          }
+        },
+        prefill: {
+          name: "Subhan",
+          email: "subhan@example.com",
+          contact: "9000090000",
+        },
+        notes: {
+          address: "ConciseAI Corporate HQ",
+        },
+        theme: {
+          color: "#f43f5e",
+        },
+      };
+
+      const razorpay = new (window as any).Razorpay(options);
+
+      // Handle payment failure (official doc style)
+      razorpay.on("payment.failed", function (response: any) {
+        alert("Payment Failed ❌");
+        console.error(response.error);
+      });
+
+      razorpay.open();
+    } catch (err) {
+      console.error("Error creating Razorpay order:", err);
+      alert("❌ Failed to create payment order.");
+    }
+  };
+
   return (
     <Card
       className={`flex flex-col ${borderColor} bg-white rounded-2xl shadow-md border transition-transform hover:scale-105 hover:shadow-lg min-w-[280px] w-full max-w-xs sm:max-w-md px-8 lg:max-w-lg mx-auto lg:mx-0`}
@@ -100,12 +166,12 @@ const PricingCard = ({
         </ul>
       </CardContent>
       <CardFooter className="mt-auto p-0">
-        <Link
-          href={paymentLink || "#"}
+        <Button
+          onClick={handlePayment}
           className="flex items-center justify-center gap-2 w-full text-center py-2 px-4 rounded-lg bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 text-white font-semibold shadow-md hover:from-rose-600 hover:to-rose-800 transition-colors duration-200"
         >
           Buy Now <ArrowRight size={18} />
-        </Link>
+        </Button>
       </CardFooter>
     </Card>
   );
@@ -113,52 +179,42 @@ const PricingCard = ({
 
 function PricingSection() {
   return (
-    <MotionDiv
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, amount: 0.3 }}
-      id="pricing"
-      className="relative bg-rose-50/60 py-16"
-    >
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 relative">
-          <h2 className="text-3xl font-extrabold bg-linear-to-r from-rose-500 to-rose-700 bg-clip-text text-transparent mb-2 tracking-tight inline-block relative">
-            Pricing
-            {/* Blinking badge in the "power" position */}
-            <span
-              className="absolute -top-4 -right-16 -rotate-30 animate-pulse"
-              style={{ fontSize: "0.65rem" }}
-            >
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 font-semibold shadow-sm border border-yellow-200">
-                <svg
-                  className="w-2 h-2 mr-1 text-yellow-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <circle cx="10" cy="10" r="10" />
-                </svg>
-                under dev
-              </span>
-            </span>
-          </h2>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            Choose the plan that fits your needs
-          </p>
+    <>
+      <MotionDiv
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.3 }}
+        id="pricing"
+        className="relative bg-rose-50/60 py-16"
+      >
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 relative">
+            <h2 className="text-3xl font-extrabold bg-linear-to-r from-rose-500 to-rose-700 bg-clip-text text-transparent mb-2 tracking-tight inline-block relative">
+              Pricing
+            </h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Choose the plan that fits your needs
+            </p>
+          </div>
+          <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-8">
+            {plans.map((plan, idx) => (
+              <MotionDiv
+                key={plan.id}
+                variants={itemVariants}
+                className="w-full flex"
+              >
+                <PricingCard {...plan} />
+              </MotionDiv>
+            ))}
+          </div>
         </div>
-        <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-8">
-          {plans.map((plan, idx) => (
-            <MotionDiv
-              key={plan.id}
-              variants={itemVariants}
-              className="w-full flex"
-            >
-              <PricingCard {...plan} />
-            </MotionDiv>
-          ))}
-        </div>
-      </div>
-    </MotionDiv>
+      </MotionDiv>
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="afterInteractive"
+      />
+    </>
   );
 }
 
