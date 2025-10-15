@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
-import prisma from "@/lib/prisma";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
@@ -31,36 +30,21 @@ export async function POST(req: NextRequest) {
     }
 
     if (expectedSignature === razorpay_signature) {
-      // Payment verified - update user status to pro
-      await prisma.$transaction([
-        prisma.user.upsert({
-          where: { email: user.emailAddresses[0].emailAddress },
-          update: {
-            status: "pro",
-            price_id: "pro_plan_id",
-          },
-          create: {
-            id: user.id,
-            email: user.emailAddresses[0].emailAddress,
-            full_name: user.fullName,
-            status: "pro",
-            price_id: "pro_plan_id",
-          },
-        }),
-        prisma.payment.create({
-          data: {
-            stripe_payment_id: razorpay_payment_id,
-            amount: 1900,
-            status: "completed",
-            price_id: "pro_plan_id",
-            user_email: user.emailAddresses[0].emailAddress,
-          },
-        }),
-      ]);
+      // Payment verified
+      // Note: Database storage removed - working without database
+      // In production, you would store this in a database or external service
+      console.log(
+        "Payment verified for user:",
+        user.emailAddresses[0].emailAddress
+      );
+      console.log("Payment ID:", razorpay_payment_id);
+      console.log("Order ID:", razorpay_order_id);
 
       return NextResponse.json({
         success: true,
-        message: "Payment verified and user upgraded to pro",
+        message: "Payment verified successfully",
+        userId: user.id,
+        paymentId: razorpay_payment_id,
       });
     } else {
       return NextResponse.json(
