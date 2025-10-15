@@ -1,36 +1,18 @@
-import prisma from "./prisma";
+// Database removed - app now works without database
+// Summaries are displayed directly without persistence
 
 export async function getSummaries(userId: string) {
-  try {
-    const summaries = await prisma.pdfSummary.findMany({
-      where: {
-        user_id: userId,
-      },
-      orderBy: {
-        created_at: "desc",
-      },
-    });
-
-    return summaries;
-  } catch (error) {
-    console.error("Error fetching summaries:", error);
-    throw new Error("Failed to fetch summaries");
-  }
+  // No database - return empty array
+  // Summaries are generated on-demand and displayed directly without storage
+  console.log("getSummaries called for user:", userId);
+  return [];
 }
 
 export async function getSummaryById(id: string) {
-  try {
-    const summary = await prisma.pdfSummary.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    return summary;
-  } catch (error) {
-    console.error("Error fetching summary by ID:", error);
-    return null;
-  }
+  // No database - return null
+  // Summaries are generated on-demand and displayed directly without storage
+  console.log("getSummaryById called for id:", id);
+  return null;
 }
 
 // word count function

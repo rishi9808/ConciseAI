@@ -1,9 +1,9 @@
 "use server";
 
-import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
+// Database removed - app now works without database
 export async function deleteSummary({ summaryId }: { summaryId: string }) {
   try {
     const user = await currentUser();
@@ -12,17 +12,12 @@ export async function deleteSummary({ summaryId }: { summaryId: string }) {
       throw new Error("User not authenticated");
     }
 
-    const result = await prisma.pdfSummary.delete({
-      where: {
-        id: summaryId,
-      },
-    });
+    // No database - summaries are not stored
+    // This function is kept for compatibility but does nothing
+    console.log("deleteSummary called for id:", summaryId);
 
-    if (result) {
-      revalidatePath("/dashboard");
-      return { success: true };
-    }
-    return { success: false };
+    revalidatePath("/dashboard");
+    return { success: true };
   } catch (error) {
     console.error("Error deleting summary:", error);
     throw new Error("Failed to delete summary");
