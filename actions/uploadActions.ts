@@ -8,7 +8,10 @@ import { fetchAndExtractPdfText } from "@/lib/langChain";
 
 export async function generatePdfSummary(
   uploadResponse: Array<{
-    serverData: { fileName: string; fileUrl: string; userId: string };
+    serverData?: { fileName: string; fileUrl: string; userId: string };
+    fileName?: string;
+    fileUrl?: string;
+    userId?: string;
   }>
 ) {
   if (!uploadResponse || uploadResponse.length === 0) {
@@ -19,12 +22,14 @@ export async function generatePdfSummary(
     };
   }
 
-  const serverData = uploadResponse[0]?.serverData;
+  // Handle both old and new UploadThing response formats
+  const uploadData = uploadResponse[0];
+  const serverData = uploadData?.serverData || uploadData;
 
   if (!serverData) {
     return {
       success: false,
-      message: "Invalid upload response: missing serverData.",
+      message: "Invalid upload response: missing data.",
       data: null,
     };
   }

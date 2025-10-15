@@ -77,6 +77,9 @@ function UploadPDFForm({
       const resp = await startUpload([file]);
 
       console.log("Upload response:", resp);
+      console.log("Upload response type:", typeof resp);
+      console.log("Upload response[0]:", resp?.[0]);
+      console.log("Available keys:", resp?.[0] ? Object.keys(resp[0]) : "none");
 
       if (!resp || resp.length === 0) {
         toast.error("Upload failed. Please try again.");
@@ -84,10 +87,19 @@ function UploadPDFForm({
         return;
       }
 
-      // Check if serverData exists
-      if (!resp[0]?.serverData) {
-        console.error("No serverData in upload response:", resp);
-        toast.error("Upload completed but server data is missing.");
+      // UploadThing v7+ uses serverData, older versions may use different structure
+      const uploadData = resp[0];
+      const serverData = uploadData.serverData || uploadData;
+
+      console.log("Extracted serverData:", serverData);
+
+      // Validate serverData has required fields
+      if (!serverData || !serverData.fileUrl || !serverData.fileName) {
+        console.error("Invalid server data structure:", {
+          uploadData,
+          serverData,
+        });
+        toast.error("Upload completed but required data is missing.");
         setIsUploading(false);
         return;
       }
@@ -119,8 +131,8 @@ function UploadPDFForm({
             title: data.title,
             summary: data.summary,
             parsedContent: data.parsedContent || "", // Include parsed PDF text
-            fileName: resp[0].serverData.fileName,
-            fileUrl: resp[0].serverData.fileUrl,
+            fileName: serverData.fileName,
+            fileUrl: serverData.fileUrl,
             createdAt: new Date().toISOString(),
           };
 
