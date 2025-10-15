@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { z } from "zod";
 import { useUploadThing } from "@/utils/uploadthing";
 import { toast } from "sonner";
-import { generatePdfSummary, storePdfSummary } from "@/actions/uploadActions";
+import { generatePdfSummary } from "@/actions/uploadActions";
 import { useRouter } from "next/navigation";
 
 function UploadPDFForm({
@@ -71,63 +71,95 @@ function UploadPDFForm({
       );
       return;
     }
-    // Upload the file using UploadThing
-    const resp = await startUpload([file]);
-    if (!resp || resp.length === 0) {
-      toast.error("Upload failed. Please try again.");
-      return;
-    }
-
-    const summaryToastId = toast.loading("Generating PDF summary...", {
-      id: "summary",
-    });
 
     try {
-      const summary = await generatePdfSummary(resp);
-      console.log("PDF Summary:", summary);
-      toast.success("PDF summary generated successfully!", {
-        id: summaryToastId,
-      });
-      const { data, message } = summary;
+      // Upload the file using UploadThing
+      const resp = await startUpload([file]);
 
-      if (data) {
-        toast.loading("Saving summary to database...", {
-          id: "saveSummary",
+      console.log("Upload response:", resp);
+
+      if (!resp || resp.length === 0) {
+        toast.error("Upload failed. Please try again.");
+        setIsUploading(false);
+        return;
+      }
+
+      // Check if serverData exists
+      if (!resp[0]?.serverData) {
+        console.error("No serverData in upload response:", resp);
+        toast.error("Upload completed but server data is missing.");
+        setIsUploading(false);
+        return;
+      }
+
+      const summaryToastId = toast.loading("Generating PDF summary...", {
+        id: "summary",
+      });
+
+      try {
+        const summary = await generatePdfSummary(resp);
+        console.log("PDF Summary:", summary);
+
+        if (!summary.success) {
+          toast.error(summary.message || "Failed to generate summary", {
+            id: summaryToastId,
+          });
+          return;
+        }
+
+        toast.success("PDF summary generated successfully!", {
+          id: summaryToastId,
         });
 
-        if (data.summary) {
-          // save it to databse or handle it as needed
-          let storeResult = await storePdfSummary({
-            fileName: resp[0].serverData.fileName,
-            fileUrl: resp[0].serverData.fileUrl,
+        const { data } = summary;
+
+        if (data && data.summary) {
+          // Prepare data for the summary page (no database storage)
+          const summaryData = {
             title: data.title,
             summary: data.summary,
-          });
+            parsedContent: data.parsedContent || "", // Include parsed PDF text
+            fileName: resp[0].serverData.fileName,
+            fileUrl: resp[0].serverData.fileUrl,
+            createdAt: new Date().toISOString(),
+          };
 
-          console.log("Store result:", storeResult);
-          console.log("Store result data:", storeResult.data);
-          console.log("Data keys:", Object.keys(storeResult.data || {}));
-          console.log("Data stringified:", JSON.stringify(storeResult.data));
-          console.log("Store result ID:", storeResult.data?.id);
+          // Store in sessionStorage for the summary page
+          sessionStorage.setItem("currentSummary", JSON.stringify(summaryData));
 
-          toast.success("PDF summary stored successfully!", {
-            id: "saveSummary",
-          });
           setSelectedFile(null);
           if (fileInputRef.current) {
-            setIsUploading(false);
             fileInputRef.current.value = ""; // Reset file input
           }
 
-          // Redirect to the summary page or handle it as needed
-          router.push(`/summaries/${storeResult.data?.id}`);
+          // Encode data and pass via URL
+          const encodedData = encodeURIComponent(JSON.stringify(summaryData));
+
+          toast.success("Redirecting to summary...", {
+            id: "saveSummary",
+          });
+
+          // Redirect to the summary display page
+          router.push(`/summary?data=${encodedData}`);
+        } else {
+          toast.error("No summary data generated", { id: summaryToastId });
         }
+      } catch (error) {
+        console.error("Error generating PDF summary:", error);
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Failed to generate PDF summary. Please try again.",
+          { id: summaryToastId }
+        );
       }
     } catch (error) {
-      console.error("Error generating PDF summary:", error);
-      toast.error("Failed to generate PDF summary. Please try again.", {
-        id: summaryToastId,
-      });
+      console.error("Error during upload:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Upload failed. Please try again."
+      );
     } finally {
       setIsUploading(false);
     }
