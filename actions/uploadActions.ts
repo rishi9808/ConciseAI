@@ -2,25 +2,16 @@
 
 import { generatePdfSummaryFromGeminiAi } from "@/lib/geminiAi";
 import { fetchAndExtractPdfText } from "@/lib/langChain";
-import { generatePdfSummaryFromOpenAI } from "@/lib/openAi";
-import prisma from "@/lib/prisma";
-import { auth, currentUser } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
+// Removed database imports - no longer storing in database
 
-interface pdfSummaryType {
-  userId?: string;
-  title: string;
-  summary: string;
-  fileName: string;
-  fileUrl: string;
-}
+// Removed pdfSummaryType interface - no longer storing in database
 
 export async function generatePdfSummary(
   uploadResponse: Array<{
     serverData: { fileName: string; fileUrl: string; userId: string };
   }>
 ) {
-  if (!uploadResponse) {
+  if (!uploadResponse || uploadResponse.length === 0) {
     return {
       success: false,
       message: "No upload response provided.",
@@ -28,23 +19,50 @@ export async function generatePdfSummary(
     };
   }
 
-  const {
-    serverData: { userId, fileName, fileUrl },
-  } = uploadResponse[0];
+  const serverData = uploadResponse[0]?.serverData;
+
+  if (!serverData) {
+    return {
+      success: false,
+      message: "Invalid upload response: missing serverData.",
+      data: null,
+    };
+  }
+
+  const { userId, fileName, fileUrl } = serverData;
 
   if (!fileUrl) {
     return {
       success: false,
-      message: "Invalid upload response data.",
+      message: "Invalid upload response: missing file URL.",
+      data: null,
+    };
+  }
+
+  if (!fileName) {
+    return {
+      success: false,
+      message: "Invalid upload response: missing file name.",
       data: null,
     };
   }
 
   try {
+    console.log("Fetching and extracting PDF text from:", fileUrl);
     const pdfText = await fetchAndExtractPdfText(fileUrl);
+
+    if (!pdfText || pdfText.trim().length === 0) {
+      return {
+        success: false,
+        message:
+          "Could not extract text from PDF. The file might be empty or corrupted.",
+        data: null,
+      };
+    }
 
     let summary;
     try {
+      console.log("Generating summary with Gemini AI...");
       summary = await generatePdfSummaryFromGeminiAi(pdfText);
       console.log("Generated summary:", summary);
     } catch (error) {
@@ -52,12 +70,14 @@ export async function generatePdfSummary(
       return {
         success: false,
         message:
-          "Failed to generate summary with Gemini AI. Please try again later.",
+          error instanceof Error
+            ? `Failed to generate summary: ${error.message}`
+            : "Failed to generate summary with Gemini AI. Please try again later.",
         data: null,
       };
     }
 
-    if (!summary) {
+    if (!summary || summary.trim().length === 0) {
       return {
         success: false,
         message: "No summary generated from the PDF content.",
@@ -73,90 +93,21 @@ export async function generatePdfSummary(
       data: {
         title: formatedFileName,
         summary,
+        parsedContent: pdfText, // Include the raw extracted PDF text
       },
     };
   } catch (error) {
     console.error("Error generating PDF summary:", error);
     return {
       success: false,
-      message: "Failed to generate PDF summary.",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to generate PDF summary.",
       data: null,
     };
   }
 }
 
-export async function savePdfSummary({
-  fileName,
-  fileUrl,
-  title,
-  summary,
-}: pdfSummaryType) {
-  try {
-    const user = await currentUser();
-    console.log("🧑 Clerk user in production:", user?.id);
-    if (!user) throw new Error("User not authenticated");
-    const userId = user.id;
-    const savedSummary = await prisma.pdfSummary.create({
-      data: {
-        user_id: userId,
-        file_name: fileName,
-        original_file_url: fileUrl,
-        title: title,
-        summary_text: summary,
-        created_at: new Date(),
-      },
-    });
-
-    return {
-      success: true,
-      message: "PDF summary saved successfully.",
-      data: savedSummary,
-    };
-  } catch (error: any) {
-    console.error("Error saving PDF summary:", error);
-    return {
-      success: false,
-      message: "Failed to save PDF summary.",
-      data: null,
-    };
-  }
-}
-
-export async function storePdfSummary({
-  fileName,
-  fileUrl,
-  title,
-  summary,
-}: pdfSummaryType) {
-  try {
-    // No need to get userId here, savePdfSummary will handle it
-    const savedPdfSummary = await savePdfSummary({
-      fileName,
-      fileUrl,
-      title,
-      summary,
-    });
-
-    if (!savedPdfSummary) {
-      return {
-        success: false,
-        message: "Failed to save PDF summary.",
-      };
-    }
-
-    // Revalidate the saved summary
-    revalidatePath(`/summaries/${savedPdfSummary.data?.id}`);
-
-    return {
-      success: true,
-      message: "PDF summary stored successfully.",
-      data: savedPdfSummary.data,
-    };
-  } catch (error) {
-    console.error("Error storing PDF summary:", error);
-    return {
-      success: false,
-      message: "Failed to store PDF summary.",
-    };
-  }
-}
+// Database storage functions removed - app now works without database
+// PDF summaries are displayed directly without persistence

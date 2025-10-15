@@ -6,7 +6,18 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:start": "./scripts/start-db.sh",
+    "db:stop": "./scripts/stop-db.sh",
+    "db:reset": "./scripts/reset-db.sh",
+    "db:studio": "./scripts/db-studio.sh",
+    "db:migrate": "npx prisma migrate dev",
+    "db:generate": "npx prisma generate",
+    "db:push": "npx prisma db push",
+    "db:backup": "./scripts/backup-db.sh",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.23.2",
@@ -52,7 +63,7 @@
     "langchain": "^0.3.29",
     "lucide-react": "^0.525.0",
     "motion": "^12.23.0",
-    "next": "15.3.4",
+    "next": "^15.5.5",
     "next-themes": "^0.4.6",
     "pdf-parse": "^1.1.1",
     "prettier": "^3.6.2",

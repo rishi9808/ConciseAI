@@ -1,0 +1,12 @@
+# Docker Configuration
+# Contains Docker and docker-compose files for local development
+
+# PostgreSQL Data
+postgres_data/
+
+# pgAdmin Data
+pgadmin_data/
+
+# Logs
+*.log
+logs/
