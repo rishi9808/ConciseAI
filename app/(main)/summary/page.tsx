@@ -7,7 +7,7 @@ import ParsedContentViewer from "@/components/summaries/ParsedContentViewer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileText, Upload } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { MotionDiv } from "@/components/common/motion-wrapper";
 import { cardVariants } from "@/utils/animations";
 import { useSearchParams } from "next/navigation";
@@ -25,7 +25,7 @@ function getWordCount(text: string): number {
   return text.trim().split(/\s+/).length;
 }
 
-export default function SummaryDisplayPage() {
+function SummaryContent() {
   const searchParams = useSearchParams();
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -175,5 +175,23 @@ export default function SummaryDisplayPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function SummaryDisplayPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen flex items-center justify-center">
+          <BgGradient />
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading summary...</p>
+          </div>
+        </main>
+      }
+    >
+      <SummaryContent />
+    </Suspense>
   );
 }
