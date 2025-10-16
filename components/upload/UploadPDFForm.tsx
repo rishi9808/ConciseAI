@@ -88,28 +88,46 @@ function UploadPDFForm({
       }
 
       // UploadThing v7+ uses serverData, older versions may use different structure
-      const uploadData = resp[0];
-      const serverData = uploadData.serverData || uploadData;
+      const uploadData = resp[0] as any;
 
-      console.log("Extracted serverData:", serverData);
+      // Try to extract serverData from various possible locations
+      let extractedData = uploadData.serverData || uploadData;
 
-      // Validate serverData has required fields
-      if (!serverData || !serverData.fileUrl || !serverData.fileName) {
+      // UploadThing might return data with different property names
+      const fileUrl =
+        extractedData.fileUrl || extractedData.url || uploadData.url;
+      const fileName =
+        extractedData.fileName || extractedData.name || uploadData.name;
+      const userId = extractedData.userId || uploadData.userId;
+
+      console.log("Extracted data:", { fileUrl, fileName, userId });
+      console.log("Full uploadData:", uploadData);
+      console.log("Extracted serverData:", extractedData);
+
+      // Validate required fields
+      if (!fileUrl || !fileName) {
         console.error("Invalid server data structure:", {
           uploadData,
-          serverData,
+          extractedData,
+          extractedFileUrl: fileUrl,
+          extractedFileName: fileName,
         });
         toast.error("Upload completed but required data is missing.");
         setIsUploading(false);
         return;
       }
 
+      // Create normalized serverData object for use below
+      const serverData = { fileUrl, fileName, userId };
+
       const summaryToastId = toast.loading("Generating PDF summary...", {
         id: "summary",
       });
 
       try {
-        const summary = await generatePdfSummary(resp);
+        // Pass normalized data structure to generatePdfSummary
+        const normalizedResponse = [{ serverData }];
+        const summary = await generatePdfSummary(normalizedResponse);
         console.log("PDF Summary:", summary);
 
         if (!summary.success) {
